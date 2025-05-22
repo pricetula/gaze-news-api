@@ -15,8 +15,9 @@ type Config struct {
 		Name       string `json:"name"`
 		Connection string `json:"connection"`
 	} `json:"db"`
-	Port    string `json:"port"`
-	APP_ENV string `json:"app_env"`
+	Port         string `json:"port"`
+	APP_ENV      string `json:"app_env"`
+	NEWS_API_KEY string `json:"news_api_key"`
 }
 
 // NewConfig loads configuration from environment variables or a JSON file
@@ -42,6 +43,7 @@ func unmarshal(cfg *Config) error {
 	// Consider other sources like dedicated config files or libraries in production
 	cfg.Port = os.Getenv("PORT")
 	cfg.APP_ENV = os.Getenv("APP_ENV")
+	cfg.NEWS_API_KEY = os.Getenv("NEWS_API_KEY")
 	cfg.DB.User = os.Getenv("DB_USER")
 	cfg.DB.Password = os.Getenv("DB_PASSWORD")
 	cfg.DB.Name = os.Getenv("DB_NAME")
