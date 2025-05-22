@@ -1,0 +1,97 @@
+# Specify the Docker Compose file format version. '3.8'.
+version: '3.8'
+
+services:
+    # Defining the API service container
+    api:
+        # Build the Docker image for the API service from the current context
+        build:
+            # The context for the build process is the current directory where docker-compose.yml resides
+            context: .
+            # Specify the Dockerfile to use for building this service's image
+            dockerfile: Dockerfile.dev
+        # Define service dependencies. 'api' will start only after 'db' is running.
+        depends_on:
+            - db
+        # Assign the API service to the custom network
+        networks:
+            - gazenews_network
+        # Assign a specific, readable name to the container
+        container_name: "gazenews_api"
+        # Specify the .env file to be used for environment variables within the container.
+        # Variables defined here are injected into the container's environment.
+        env_file:
+            - .env
+        # Explicitly pass environment variables to the container.
+        # These variables will be populated from the .env file specified above,
+        # or from the shell environment if they are not in .env.
+        environment:
+            - DB_USER=${DB_USER}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_NAME=${DB_NAME}
+            - PORT=${PORT}
+            - APP_ENV=${APP_ENV}
+        # Port mapping: HOST_PORT:CONTAINER_PORT
+        # Exposes the container's PORT to the host machine's PORT.
+        ports:
+            - "${PORT}:${PORT}"
+        # Volume mounting: HOST_PATH:CONTAINER_PATH
+        # Mounts the current host directory into the /app directory inside the container.
+        # This is useful for development as code changes on the host are immediately reflected in the container.
+        volumes:
+          - ./:/app
+
+    # Defining the PostgreSQL database service container
+    db:
+        # Use the specified PostgreSQL image. '17-alpine'.
+        image: postgres:17-alpine
+        # Assign a specific, readable name to the container
+        container_name: "gazenews_db"
+        # Restart policy: 'always' attempts to restart the container if it stops.
+        # For local development, 'unless-stopped' can also be useful, as it prevents restart
+        # if you explicitly stop the container using 'docker stop'.
+        restart: always
+        # Environment variables specific to the PostgreSQL container.
+        # These are used by the PostgreSQL image to initialize the database.
+        environment:
+            # Sets the name of the default database
+            POSTGRES_DB: ${DB_NAME}
+            # Sets the default database user
+            POSTGRES_USER: ${DB_USER}
+            # Sets the password for the default database user
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            # Optional: Set a specific character encoding for the database.
+            # POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+        # Port mapping: HOST_PORT:CONTAINER_PORT
+        # Exposes the internal PostgreSQL port (5432) to port 5433 on the host machine.
+        # This allows you to connect to the database from your host machine (e.g., via psql or a GUI client).
+        ports:
+            - "5433:5432"
+        # Volume mounting for data persistence and initialization
+        volumes:
+            # Mount a named volume to persist PostgreSQL data. This ensures data is not lost
+            # when the container is removed or recreated. The data will be stored in a Docker-managed volume.
+            - gazenews_db:/var/lib/postgresql/data/
+            # Mount an initialization SQL script. This script will be run by PostgreSQL
+            # when the container is first created and the data volume is empty.
+            # Useful for creating initial schemas, tables, or seed data upon the first run.
+            - ./internal/db/sqlxdb/create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
+        # Assign the database service to the custom network
+        networks:
+            - gazenews_network
+
+# Define named volumes for data persistence
+volumes:
+    # A named volume for PostgreSQL data. Docker manages this volume, making it persistent.
+    # Data in this volume will survive container recreation.
+    gazenews_db:
+        # driver: local # (Optional) Explicitly specify the local driver. It's the default and usually fine.
+
+# Define custom networks
+networks:
+    gazenews_network:
+        # Use the default bridge driver for a custom network.
+        # Services connected to this network can communicate with each other using their service names (e.g., 'db' from 'api').
+        driver: bridge
+        # Optional: Assign a specific name to the created bridge network (useful for external tools or clearer identification).
+        # name: gazenews_app_network
