@@ -11,12 +11,9 @@ import (
 )
 
 // SetupRoutes registers all API routes
-func SetupRoutes(ctx context.Context, app *fiber.App, unitOfWork uow.UnitOfWork) {
-	// Group routes under /api/v1
-	api := app.Group("/api/v1")
-
+func SetupRoutes(ctx context.Context, router fiber.Router, unitOfWork uow.UnitOfWork) {
 	// Pass the DB to each handler
-	api.Get("/articles", func(c *fiber.Ctx) error {
+	router.Get("/articles", func(c *fiber.Ctx) error {
 		// Extract the ids parameter from the query string
 		ids := c.Query("ids")
 

@@ -31,8 +31,11 @@ func main() {
 
 	app := fiber.New()
 
+	// Group routes under /v1
+	router := app.Group("/v1")
+
 	// Inject DB into routes
-	api.SetupRoutes(ctx, app, unitOfWork)
+	api.SetupRoutes(ctx, router, unitOfWork)
 
 	// Start background fetch scheduler
 	// go scheduler.Start(database)
