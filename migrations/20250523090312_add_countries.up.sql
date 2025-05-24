@@ -23,14 +23,14 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL UNIQUE -- Category name should be unique and not null
 );
 
--- 3a. Alter the 'articles' table to change the source_id field to string
+-- 4. Alter the 'articles' table to change the source_id field to string
 ALTER TABLE articles
     DROP CONSTRAINT articles_source_id_fkey,
     DROP CONSTRAINT articles_author_id_fkey,
     ALTER COLUMN source_id TYPE VARCHAR(255) USING source_id::VARCHAR(255),
     ALTER COLUMN author_id TYPE VARCHAR(255) USING author_id::VARCHAR(255); -- Change UUID to string
 
--- 4. Alter the 'sources' table to change the id field to string
+-- 5. Alter the 'sources' table to change the id field to string
 ALTER TABLE sources
     ALTER COLUMN id TYPE VARCHAR(255) USING id::VARCHAR(255), -- Change UUID to string
     ADD COLUMN description TEXT, -- Description of the source
@@ -39,15 +39,17 @@ ALTER TABLE sources
     ADD COLUMN language_id VARCHAR(255) REFERENCES languages(id) ON DELETE SET NULL, -- Foreign key to languages table
     ADD COLUMN country_id VARCHAR(255) REFERENCES countries(id) ON DELETE SET NULL; -- Foreign key to countries table
 
+-- 6. Alter the 'articles' table by adding foreign key constraint to 'sources' table
 ALTER TABLE articles
     ADD CONSTRAINT articles_source_id_fkey
         FOREIGN KEY (source_id)
         REFERENCES sources (id);
 
--- 6. Alter the 'authors' table to change the id field to string
+-- 7. Alter the 'authors' table to change the id field to string
 ALTER TABLE authors
     ALTER COLUMN id TYPE VARCHAR(255) USING id::VARCHAR(255); -- Change UUID to string
 
+-- 8. Alter the 'articles' table by adding foreign key constraint to 'authors' table
 ALTER TABLE articles
     ADD CONSTRAINT articles_author_id_fkey
         FOREIGN KEY (author_id)
