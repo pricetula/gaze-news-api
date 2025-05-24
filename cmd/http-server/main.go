@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/pricetula/gaze-news-api/internal/api"
 	"github.com/pricetula/gaze-news-api/internal/db/sqlxdb"
+	"github.com/pricetula/gaze-news-api/internal/news"
 	"github.com/pricetula/gaze-news-api/internal/uow"
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
@@ -29,13 +30,17 @@ func main() {
 	// Setup UoW
 	unitOfWork := uow.New(db)
 
+	// Setup the news API client
+	newsAPI := news.NewNews(cfg)
+
+	// Setup fiber app
 	app := fiber.New()
 
 	// Group routes under /v1
 	router := app.Group("/v1")
 
 	// Inject DB into routes
-	api.SetupRoutes(ctx, router, unitOfWork)
+	api.SetupRoutes(ctx, router, unitOfWork, newsAPI)
 
 	// Start background fetch scheduler
 	// go scheduler.Start(database)
