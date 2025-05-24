@@ -10,10 +10,8 @@ import (
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 
-// SetupRoutes registers all API routes
-func SetupRoutes(ctx context.Context, router fiber.Router, unitOfWork uow.UnitOfWork) {
-	// Pass the DB to each handler
-	router.Get("/articles", func(c *fiber.Ctx) error {
+func getArticlesById(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
 		// Extract the ids parameter from the query string
 		ids := c.Query("ids")
 
@@ -52,5 +50,6 @@ func SetupRoutes(ctx context.Context, router fiber.Router, unitOfWork uow.UnitOf
 		}
 		// Return the articles as JSON
 		return c.JSON(articles)
-	})
+	}
+
 }
