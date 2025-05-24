@@ -10,6 +10,7 @@ import (
 
 type Repositories struct {
 	ArticleRepository domain.ArticleRepository
+	SourcesRepository domain.SourcesRepository
 }
 
 type UnitOfWork interface {
@@ -37,6 +38,7 @@ func (u *unitOfWork) Do(ctx context.Context, fn func(r *Repositories) error) err
 	// Create a new instance of Repositories with the transaction
 	repos := &Repositories{
 		ArticleRepository: repository.NewArticlesRepository(tx),
+		SourcesRepository: repository.NewSourcesRepository(tx),
 	}
 
 	// Execute the function with the repositories. If it returns an error, rollback the transaction
