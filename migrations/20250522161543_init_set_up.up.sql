@@ -1,6 +1,4 @@
--- Connect to your database first (manually in psql or via connection string)
--- \c my_app_db;
-
+-- This SQL script sets up the initial database schema for the news aggregator application.
 -- 1. Enable the pgcrypto extension for UUID generation
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
