@@ -34,7 +34,7 @@ func addsources(ctx context.Context, unitOfWork uow.UnitOfWork, newsAPI *news.Ne
 
 		// Use the unitOfWork to bulk insert the sources into the database
 		if err := unitOfWork.Do(ctx, func(r *uow.Repositories) error {
-			// Get articles from the database by their IDs
+			// Store the sources in the database
 			err := r.SourcesRepository.AddSources(l)
 			if err != nil {
 				return err

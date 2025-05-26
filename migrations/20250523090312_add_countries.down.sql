@@ -3,13 +3,10 @@
 
 -- 1. Alter the 'articles' table to change the id field back to UUID
 ALTER TABLE articles
-    DROP CONSTRAINT articles_source_id_fkey;
-ALTER TABLE articles
-    ALTER COLUMN source_id TYPE UUID USING source_id::UUID; -- Change string back to UUID
-ALTER TABLE articles
-    ADD CONSTRAINT articles_source_id_fkey
-        FOREIGN KEY (source_id)
-        REFERENCES sources (id);
+    DROP CONSTRAINT articles_source_id_fkey,
+    DROP CONSTRAINT articles_author_id_fkey,
+    ALTER COLUMN source_id TYPE UUID USING source_id::UUID,
+    ALTER COLUMN author_id TYPE UUID USING author_id::UUID; -- Change string back to UUID
 
 -- 2. Alter the 'authors' table to change the id field back to UUID
 ALTER TABLE authors
@@ -19,7 +16,16 @@ ALTER TABLE authors
 ALTER TABLE sources
     ALTER COLUMN id TYPE UUID USING id::UUID; -- Change string back to UUID
 
--- 4. Drop the 'sources' table added fields
+-- 4. Add foreign key relationship contstraints after changing both columns to be UUID
+ALTER TABLE articles
+    ADD CONSTRAINT articles_source_id_fkey
+        FOREIGN KEY (source_id)
+        REFERENCES sources (id),
+    ADD CONSTRAINT articles_author_id_fkey
+        FOREIGN KEY (author_id)
+        REFERENCES authors (id);
+
+-- 5. Drop the 'sources' table added fields
 ALTER TABLE sources
     DROP COLUMN IF EXISTS description, -- Drop description of the source
     DROP COLUMN IF EXISTS url, -- Drop URL of the source
@@ -27,11 +33,11 @@ ALTER TABLE sources
     DROP COLUMN IF EXISTS language_id, -- Drop foreign key to languages table
     DROP COLUMN IF EXISTS country_id; -- Drop foreign key to countries table
 
--- 5. Drop the 'categories' table
+-- 6. Drop the 'categories' table
 DROP TABLE IF EXISTS categories;
 
--- 6. Drop the 'languages' table
+-- 7. Drop the 'languages' table
 DROP TABLE IF EXISTS languages;
 
--- 7. Drop the 'countries' table
+-- 8. Drop the 'countries' table
 DROP TABLE IF EXISTS countries;
