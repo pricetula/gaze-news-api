@@ -1,0 +1,3 @@
+CREATE DATABASE gaze_news ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';
+CREATE USER gaze_news WITH ENCRYPTED PASSWORD 'gaze_news';
+GRANT ALL PRIVILEGES ON DATABASE gaze_news TO gaze_news;
