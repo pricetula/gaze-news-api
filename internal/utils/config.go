@@ -24,7 +24,7 @@ type Config struct {
 func NewConfig() (*Config, error) {
 	// Load environment variables from .env file
 	err := godotenv.Load(".env")
-	if err != nil {
+	if err != nil && !os.IsNotExist(err) {
 		return nil, fmt.Errorf("failed to load .env file: %w", err)
 	}
 
