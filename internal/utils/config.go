@@ -13,6 +13,7 @@ type Config struct {
 		User       string `json:"user"`
 		Password   string `json:"password"`
 		Name       string `json:"name"`
+		Host       string `json:"host"`
 		Connection string `json:"connection"`
 	} `json:"db"`
 	Port         string `json:"port"`
@@ -47,10 +48,12 @@ func unmarshal(cfg *Config) error {
 	cfg.DB.User = os.Getenv("DB_USER")
 	cfg.DB.Password = os.Getenv("DB_PASSWORD")
 	cfg.DB.Name = os.Getenv("DB_NAME")
+	cfg.DB.Host = os.Getenv("DB_HOST")
 	cfg.DB.Connection = fmt.Sprintf(
-		"postgres://%s:%s@db:5432/%s?sslmode=disable",
+		"postgres://%s:%s@%s/%s?sslmode=disable",
 		cfg.DB.User,
 		cfg.DB.Password,
+		cfg.DB.Host,
 		cfg.DB.Name,
 	)
 
