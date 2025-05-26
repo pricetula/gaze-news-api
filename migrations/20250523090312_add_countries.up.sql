@@ -93,6 +93,15 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL UNIQUE -- Category name should be unique and not null
 );
 
+INSERT INTO categories (id, name) VALUES
+    ('business', 'Business'),
+    ('entertainment', 'Entertainment'),
+    ('general', 'General'),
+    ('health', 'Health'),
+    ('science', 'Science'),
+    ('sports', 'Sports'),
+    ('technology', 'Technology');
+
 -- 4. Alter the 'articles' table to change the source_id field to string
 ALTER TABLE articles
     DROP CONSTRAINT articles_source_id_fkey,
