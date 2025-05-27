@@ -4,13 +4,34 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pricetula/gaze-news-api/internal/domain"
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 
 const (
 	baseURL = "https://newsapi.org/v2"
 )
+
+type ArticleSource struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type Article struct {
+	Source      ArticleSource `json:"source"`
+	Author      string        `json:"author"`
+	Title       string        `json:"title"`
+	Description string        `json:"description"`
+	URL         string        `json:"url"`
+	URLToImage  string        `json:"urlToImage"`
+	PublishedAt string        `json:"publishedAt"`
+	Content     string        `json:"content"`
+}
+
+type ArticlesResponse struct {
+	Status       string    `json:"status"`
+	TotalResults int       `json:"totalResults"`
+	Articles     []Article `json:"articles"`
+}
 
 type Source struct {
 	ID          string `json:"id"`
@@ -26,12 +47,6 @@ type Source struct {
 type SourcesResponse struct {
 	Status  string   `json:"status"`
 	Sources []Source `json:"sources"`
-}
-
-// ArticlesResponse represents the response from the NewsAPI articles endpoint.
-type ArticlesResponse struct {
-	Status   string           `json:"status"`
-	Articles []domain.Article `json:"articles"`
 }
 
 // News represents the NewsAPI client.
