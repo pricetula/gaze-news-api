@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/pricetula/gaze-news-api/internal/api"
 	"github.com/pricetula/gaze-news-api/internal/db/sqlxdb"
-	"github.com/pricetula/gaze-news-api/internal/news"
-	"github.com/pricetula/gaze-news-api/internal/uow"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/news"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/uow"
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 

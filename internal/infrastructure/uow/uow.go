@@ -5,7 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pricetula/gaze-news-api/internal/domain"
-	"github.com/pricetula/gaze-news-api/internal/repository"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/repository"
 )
 
 type Repositories struct {

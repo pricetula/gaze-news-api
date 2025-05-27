@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/pricetula/gaze-news-api/internal/domain"
-	"github.com/pricetula/gaze-news-api/internal/news"
-	"github.com/pricetula/gaze-news-api/internal/uow"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/news"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/uow"
 )
 
 func addsources(ctx context.Context, unitOfWork uow.UnitOfWork, newsAPI *news.News) func(c *fiber.Ctx) error {

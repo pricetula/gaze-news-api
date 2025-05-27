@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/pricetula/gaze-news-api/internal/domain"
-	"github.com/pricetula/gaze-news-api/internal/uow"
+	"github.com/pricetula/gaze-news-api/internal/infrastructure/uow"
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 
