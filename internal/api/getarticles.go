@@ -10,14 +10,28 @@ import (
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 
-func getArticlesByIds(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fiber.Ctx) error {
+func getArticles(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// Extract the ids parameter from the query string
 		ids := c.Query("ids")
+		articles := []domain.Article{}
 
 		// Check if the ids parameter is empty
 		if ids == "" {
-			return fiber.NewError(fiber.StatusBadRequest, "IDs parameter is required")
+			if err := unitOfWork.Do(ctx, func(r *uow.Repositories) error {
+				// Get articles from the database by their IDs
+				f, err := r.ArticleRepository.GetArticles()
+				if err != nil {
+					return err
+				}
+				articles = f
+				return nil
+			}); err != nil {
+				// Handle any errors that occurred during the database operation
+				return fiber.NewError(fiber.StatusExpectationFailed, err.Error())
+			}
+			// Return the articles as JSON
+			return c.JSON(articles)
 		}
 
 		// Define a slice of UUIDs to hold the parsed IDs
@@ -35,7 +49,6 @@ func getArticlesByIds(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fi
 			articleIDs = append(articleIDs, articleUUID)
 		}
 
-		articles := []domain.Article{}
 		if err := unitOfWork.Do(ctx, func(r *uow.Repositories) error {
 			// Get articles from the database by their IDs
 			f, err := r.ArticleRepository.GetArticlesByIDs(articleIDs)
@@ -51,5 +64,4 @@ func getArticlesByIds(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fi
 		// Return the articles as JSON
 		return c.JSON(articles)
 	}
-
 }

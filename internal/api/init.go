@@ -11,6 +11,6 @@ import (
 // SetupRoutes registers all API routes
 func SetupRoutes(ctx context.Context, router fiber.Router, unitOfWork uow.UnitOfWork, newsAPI *news.News) {
 	// Pass the DB to each handler
-	router.Get("/articles", getArticlesByIds(ctx, unitOfWork))
+	router.Get("/articles", getArticles(ctx, unitOfWork))
 	router.Post("/sources", addsources(ctx, unitOfWork, newsAPI))
 }
