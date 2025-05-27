@@ -16,4 +16,5 @@ type Article struct {
 
 type ArticleRepository interface {
 	GetArticlesByIDs(ids []uuid.UUID) ([]Article, error)
+	GetArticles() ([]Article, error)
 }

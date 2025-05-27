@@ -10,7 +10,7 @@ import (
 	"github.com/pricetula/gaze-news-api/internal/utils"
 )
 
-func getArticlesById(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fiber.Ctx) error {
+func getArticlesByIds(ctx context.Context, unitOfWork uow.UnitOfWork) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// Extract the ids parameter from the query string
 		ids := c.Query("ids")
